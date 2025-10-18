@@ -4,6 +4,10 @@
 # Run this script in the directory above check_location
 # Any files found will be output to the terminal
 
+# Add any file extensions to be ignored to list 'ignore_exts'
+# Generally we ignore any temporary files etc
+# Set ignore_exts = [] to list all files found
+
 # Add any folders to be ignored to the list 'ignore_folders'
 # 'outgoing' directories are ignored as they are where we deliver client reports 
 # Set ignore_folder = [] to include all folders
@@ -14,13 +18,15 @@ from pathlib import Path
 check_location = "SFTP"
 search_path = Path(check_location)
 
-# folders to ignore
+# file types and folders to ignore
+ignore_exts = [".tmp", ".partial", ".lock"]
 ignore_folders = ["outgoing"]
 
 found_files = [
     f for f in search_path.rglob("*") 
     if f.is_file()
     and not any(part in ignore_folders for part in f.parts)
+    and f.suffix not in ignore_exts
     ]
  
 # output list of found files in numbered & sorted order
