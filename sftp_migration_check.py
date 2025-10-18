@@ -12,5 +12,5 @@ search_path = Path(check_location)
 
 found_files = [f for f in search_path.rglob("*") if f.is_file()]
 
-for f in found_files:
-    print(f)
+for i, f in enumerate(sorted(found_files), start=1):
+    print(f"{i}. {f}")
