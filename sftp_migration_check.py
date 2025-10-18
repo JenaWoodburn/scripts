@@ -11,7 +11,10 @@ check_location = "SFTP"
 search_path = Path(check_location)
 
 found_files = [f for f in search_path.rglob("*") if f.is_file()]
-
+ 
 # output list of found files in numbered & sorted order
-for i, f in enumerate(sorted(found_files), start=1):
-    print(f"{i}. {f}")
+if len(found_files) == 0:
+    print("No files found")
+else:
+    for i, f in enumerate(sorted(found_files), start=1):
+        print(f"{i}. {f}")
