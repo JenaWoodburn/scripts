@@ -12,7 +12,10 @@
 # 'outgoing' directories are ignored as they are where we deliver client reports 
 # Set ignore_folder = [] to include all folders
 
+# Update timedelta minutes= in cutoff_time to show only files newer than eg 10 minutes
+
 from pathlib import Path
+from datetime import datetime, timedelta
 
 # root of folder structure to check
 check_location = "SFTP"
@@ -22,11 +25,14 @@ search_path = Path(check_location)
 ignore_exts = [".tmp", ".partial", ".lock"]
 ignore_folders = ["outgoing"]
 
+cutoff_time = datetime.now() - timedelta(minutes=10)
+
 found_files = [
     f for f in search_path.rglob("*") 
     if f.is_file()
-    and not any(part in ignore_folders for part in f.parts)
     and f.suffix not in ignore_exts
+    and not any(part in ignore_folders for part in f.parts)
+    and datetime.fromtimestamp(f.stat().st_mtime) > cutoff_time
     ]
  
 # output list of found files in numbered & sorted order
