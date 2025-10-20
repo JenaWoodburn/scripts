@@ -12,10 +12,14 @@
 # 'outgoing' directories are ignored as they are where we deliver client reports 
 # Set ignore_folder = [] to include all folders
 
-# Update timedelta minutes= in cutoff_time to show only files newer than eg 10 minutes
+# To show files only newer than cutoff_time threshold, use argument 'recent', ie 'sftp_migration_check.py recent'
+# Update threshold timedelta(minutes=) in cutoff_time to show only files newer than eg 10 minutes
+# To show all files, run file without any arguments
+
 
 from pathlib import Path
 from datetime import datetime, timedelta
+from sys import argv
 
 # root of folder structure to check
 check_location = "SFTP"
@@ -27,12 +31,14 @@ ignore_folders = ["outgoing"]
 
 cutoff_time = datetime.now() - timedelta(minutes=10)
 
+mode_recent = True if len(argv) > 1 else False
+
 found_files = [
     f for f in search_path.rglob("*") 
     if f.is_file()
     and f.suffix not in ignore_exts
     and not any(part in ignore_folders for part in f.parts)
-    and datetime.fromtimestamp(f.stat().st_mtime) > cutoff_time
+    and datetime.fromtimestamp(f.stat().st_mtime) > cutoff_time if mode_recent
     ]
  
 # output list of found files in numbered & sorted order
